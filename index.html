@@ -10,6 +10,10 @@ body{
     margin:0;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     background:#e5e7eb;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
 }
 
 /* HEADER */
@@ -42,11 +46,12 @@ body{
 
 /* CHAT */
 .chat-box{
-    height:calc(100vh - 120px);
+    flex:1;
     overflow-y:auto;
     padding:15px;
     display:flex;
     flex-direction:column;
+    -webkit-overflow-scrolling:touch;
 }
 
 .message{
@@ -56,6 +61,7 @@ body{
     margin:4px 0;
     font-size:15px;
     line-height:1.4;
+    word-wrap:break-word;
 }
 
 .bot{
@@ -77,9 +83,6 @@ body{
 
 /* INPUT */
 .input-area{
-    position:fixed;
-    bottom:0;
-    width:100%;
     display:flex;
     padding:10px;
     background:white;
@@ -91,6 +94,7 @@ input{
     padding:10px;
     border-radius:20px;
     border:1px solid #ccc;
+    font-size:15px;
 }
 
 button{
@@ -140,7 +144,6 @@ button{
 
 <div class="chat-box" id="chatBox">
 
-<!-- Tin nhắn trưa dài hơn -->
 <div class="message bot">
     e qua đây chị nhờ tí, nhanh lên
 </div>
@@ -160,7 +163,7 @@ button{
 </div>
 
 <div class="input-area">
-    <input type="text" id="userInput" placeholder="Nhập tin nhắn...">
+    <input type="text" id="userInput" placeholder="Nhập tin nhắn..." onkeypress="if(event.key==='Enter') sendMessage()">
     <button onclick="sendMessage()">Gửi</button>
 </div>
 
@@ -169,20 +172,20 @@ button{
 let step=0;
 let recallMessages=[];
 
-/* ===== CHỊ TỰ NHẬP ===== */
+/* ===== NỘI DUNG TỪ FILE CŨ ===== */
 let DOAN1="shop ơi, shop có bán áo lót nữ ko, trả lời có hoặc ko giúp e nhé, e về gấp quá quên mang đồ tùm lum hết, mà giờ xe hư nên nhừ thx e của e đi, đừng nói nó biết nha, ko lại mất công lắm, hôm qua e nhờ nó mua mấy cái quần, e cảm ơn shop!";
 let A="chị lấy e 5 cái nha";
 let B="tiết vậy, thôi e cảm ơn shop nha";
 let C="loại nào mềm mềm là dc ạ, loại su vs nếu có áo lá lấy e thêm 5 cái nha chị, có độn càn tốt ạ, size thì lấy vừa là dc ạ, lấy gấp giúp e cho nó về ạ";
 let D="dạ v lấy e 5 cái, loại nào mềm mềm á chị, à mà có áo lá hoặc áo su lấy e thêm 5 cái cho nhỏ em luôn, size thì lấy vừa vừa là dc ạ, lấy gấp giúp e cho nó về ạ";
-/* ======================= */
+/* ================================= */
 
 function addMessage(text,type,track=false){
     let msg=document.createElement("div");
     msg.classList.add("message",type);
     msg.innerText=text;
     chatBox.appendChild(msg);
-    chatBox.scrollTop=9999;
+    chatBox.scrollTop=chatBox.scrollHeight;
 
     if(track){
         recallMessages.push(msg);
@@ -194,7 +197,7 @@ function showTyping(callback){
     typing.classList.add("typing");
     typing.innerHTML='<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
     chatBox.appendChild(typing);
-    chatBox.scrollTop=9999;
+    chatBox.scrollTop=chatBox.scrollHeight;
 
     setTimeout(()=>{
         typing.remove();
@@ -261,7 +264,7 @@ function sendMessage(){
                     addMessage("Cảm ơn!, đừng nói vs nó nha shop","bot");
                 },5000);
 
-            },30000);
+            },2000);
 
             step=4;
         }
